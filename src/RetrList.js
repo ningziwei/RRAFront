@@ -6,12 +6,10 @@ const RetrList = ({idx_txt_hgh}) => {
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
-  console.log('retr list 8', idx_txt_hgh)
   const loadMoreData = () => {
     if (loading) {
       return;
     }
-    console.log('14', count)
     setLoading(true);
     if (parseInt(count)<parseInt(idx_txt_hgh.length)) {
       setData([...data, ...idx_txt_hgh.slice(count,count+10)]);
@@ -30,6 +28,7 @@ const RetrList = ({idx_txt_hgh}) => {
       style={{
         height: 500,
         overflow: 'auto',
+        margin: '10px 0',
         padding: '0 16px',
         border: '1px solid rgba(140, 140, 140, 0.35)',
       }}
@@ -37,7 +36,7 @@ const RetrList = ({idx_txt_hgh}) => {
       <InfiniteScroll
         dataLength={data.length}
         next={loadMoreData}
-        hasMore={data.length < 50}
+        hasMore={data.length < idx_txt_hgh.length}
         loader={
           <Skeleton
             avatar
