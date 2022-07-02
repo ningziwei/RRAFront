@@ -46,7 +46,7 @@ class ChildModal extends Component {
     }
 }
 
-
+// 聊天框
 class ChatWindow extends Component {
     constructor(props) {
         super(props);
@@ -58,12 +58,20 @@ class ChatWindow extends Component {
         };
         resetRobot(() => { this.setState({ loading: false }) });
     }
-
-
+    _sendMessage = (text) => {
+        if (text && text.length > 0)  {
+            this.setState({
+                messageList: [
+                    ...this.state.messageList, 
+                    {author:'them',type:'text',data:{text}}
+                ]
+            })
+        }
+    };
     _onMessageWasSent = (message) => {
         this.setState({
             messageList: [...this.state.messageList, message],
-            loading:true
+            loading: true
         }, () => {
             getAnswerAndGraph(this.state.messageList, (response) => {
                 console.log(response);
@@ -87,19 +95,6 @@ class ChatWindow extends Component {
             });
         });
     };
-    _sendMessage = (text) => {
-        if (text) {
-            if (text.length > 0) {
-                this.setState({
-                    messageList: [...this.state.messageList, {
-                        author: 'them',
-                        type: 'text',
-                        data: { text }
-                    }]
-                })
-            }
-        }
-    };
     handleClick = () => {
         if (this.state.isOpen)
             this.setState({ messageList: [], isOpen: false });
@@ -112,45 +107,57 @@ class ChatWindow extends Component {
         const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
         return (<div>
             <Spin spinning={this.state.loading} indicator={antIcon} size="large" delay={500}>
-            <Launcher
-                agentProfile={{
-                    teamName: "智能问诊机器人",
-                    imageUrl: robotAvatar
-                }}
-                onMessageWasSent={this._onMessageWasSent}
-                messageList={messageList}
-                isOpen={isOpen}
-                handleClick={this.handleClick}
-                showEmoji={false}
-            />
+                <Launcher
+                    agentProfile={{
+                        teamName: "建筑知识问答",
+                        imageUrl: robotAvatar
+                    }}
+                    onMessageWasSent={this._onMessageWasSent}
+                    messageList={messageList}
+                    isOpen={isOpen}
+                    handleClick={this.handleClick}
+                    showEmoji={false}
+                />
             </Spin>
             <ChildModal
                 ref={(ChildModal) => { this.ChildModal = ChildModal; }}
-                content={<Typography>
-                    <Title>{detail[name]}</Title>
-                    {Object.entries(detail).map(([key, value]) => {
-                        if (key === disease) {
-                            return <Typography key={key}>
-                                <Title level={3}>{key}</Title>
-                                <ul>
-                                    {value.map((d, i) => <li key={i}>
-                                        <ul>{Object.entries(d).map(([k, v]) => <li key={k}>
-                                            <Title level={4}>{k}</Title>
-                                            <Paragraph>{v}</Paragraph>
-                                        </li>)}</ul>
-                                    </li>)}
-                                </ul>
-                            </Typography>;
-                        } else {
-                            if (value.trim() === '')
-                                return {};
-                            return <Typography key={key}>
-                                <Title level={3}>{key}</Title>
-                                <Paragraph ellipsis={{ rows: 3, expandable: true }}>{value}</Paragraph>
-                            </Typography>;
+                content={
+                    <Typography>
+                        <Title>{detail[name]}</Title>
+                        {
+                            Object.entries(detail).map(
+                                ([key, value]) => {
+                                    if (key === disease) {
+                                        return <Typography key={key}>
+                                            <Title level={3}>{key}</Title>
+                                            <ul>
+                                                {value.map((d, i) => <li key={i}>
+                                                    <ul>{
+                                                        Object.entries(d).map(
+                                                            ([k, v]) => <li key={k}>
+                                                                <Title level={4}>{k}</Title>
+                                                                <Paragraph>{v}</Paragraph>
+                                                            </li>
+                                                        )
+                                                    }
+                                                    </ul>
+                                                </li>)}
+                                            </ul>
+                                        </Typography>;
+                                    } else {
+                                        if (value.trim() === '')
+                                            return {};
+                                        return <Typography key={key}>
+                                            <Title level={3}>{key}</Title>
+                                            <Paragraph ellipsis={{ rows: 3, expandable: true }}>{value}</Paragraph>
+                                        </Typography>;
+                                    }
+                                }
+                            )
                         }
-                    })}
-                </Typography>} />
+                    </Typography>
+                } 
+            />
         </div >)
     }
 }
@@ -162,10 +169,8 @@ export class ChatRobot extends Component {
             data: null,
             node: null
         };
-       
     }
     setGraphData = data => this.setState({ data });
-
     onNodeClick(node) {
         console.log(node)
         this.setState({ node })
@@ -178,23 +183,20 @@ export class ChatRobot extends Component {
 
     render() {
         return (
-
-
             <Row type='flex' justify="start">
-
+                {/* 对话框所在列 */}
                 <Col span={8}>
-                        <ChatWindow
-                            setGraphData={this.setGraphData.bind(this)}
-                            switchNode={this.state.node}
-                            ref={(ChatWindow) => { this.ChatWindow = ChatWindow; }} />
-
+                    <ChatWindow
+                        setGraphData={this.setGraphData.bind(this)}
+                        switchNode={this.state.node}
+                        ref={(ChatWindow) => { this.ChatWindow = ChatWindow; }} />
                 </Col>
+                {/* 图谱展示所在列 */}
                 <Col span={16}>
                     <ForceGraph data={this.state.data} getNodeName={(node) => {
                         this.onNodeClick(node)
                     }} />
                 </Col>
-
             </Row>
         )
     }

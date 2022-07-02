@@ -38,9 +38,9 @@ export function getAnswer(messageList, callback) {
     postData('getAnswer', messageList, callback);
 }
 
-export function getAnswerAndGraph(messageList, callback) {
-    postData('getAnswerAndGraph', messageList, callback);
-}
+// export function getAnswerAndGraph(messageList, callback) {
+//     postData('getAnswerAndGraph', messageList, callback);
+// }
 
 export function resetRobot(callback) {
     postData('resetRobot', "",callback);
@@ -57,4 +57,7 @@ export function getBugDetail(bugKey, callback) {
 export function getRetrival(messageList, callback) {
     // getData('getAnswer', callback, JSON.stringify(messageList));
     postData('retrival', messageList, callback);
+}
+export function getAnswerAndGraph(messageList, callback) {
+    postData('find_node', messageList, callback);
 }
