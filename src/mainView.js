@@ -1,7 +1,7 @@
 import './mainView.css';
 import React, { Component } from 'react';
 import { Layout, Menu } from 'antd';
-import { BugMenu } from "./bugDetail";
+import { RetrView } from "./retrView";
 import { ChatRobot } from "./chatRobot";
 import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
@@ -38,7 +38,7 @@ export class MainView extends Component {
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
                     <div style={{ background: '#fff', padding: "24px 80px", minHeight: 600 }}>
-                        <Route path='/' exact component={BugMenu}></Route>
+                        <Route path='/' exact component={RetrView}></Route>
                         <Route path='/QA' exact component={ChatRobot}></Route>
                     </div>
                     {/* <Breadcrumb style={{margin: '16px 0'}}>
@@ -48,7 +48,7 @@ export class MainView extends Component {
                     </Breadcrumb>
                     <div style={{background: '#fff', padding: "24px 80px" , minHeight: 500}}>
                         <Row type="flex" justify="start">
-                            <Col span={8}><BugMenu/></Col>
+                            <Col span={8}><RetrView/></Col>
                             <Col span={16}><ChatRobot/></Col>
                         </Row>
                     </div> */}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Tree, Input, Typography, Row, Col} from 'antd';
 import {getBugDetail, getBugs, getRetrival} from "./api";
-import RetrList from './RetrList';
+import RetrList from './retrList';
 
 const {Title, Paragraph, Text} = Typography;
 const {TreeNode} = Tree;
@@ -53,18 +53,8 @@ class BugDetail extends Component {
         )
     }
 }
-const FunctionalComponent = () => {
-    const [count, setCount] = React.useState(0);
 
-    return (
-        <div>
-        <p>count: {count}</p>
-        <button onClick={() => setCount(count + 1)}>Click</button>
-        </div>
-    );
-};
-
-export class BugMenu extends Component {
+export class RetrView extends Component {
     state = {
         expandedKeys: [],
         searchValue: '',
@@ -161,14 +151,14 @@ export class BugMenu extends Component {
                     />
                     {/* <Search style={{marginBottom:8}} placeholder="Search" 
                         onChange={this.onChange} onSearch={this.onSearch}/> */}
-                    <Tree
+                    {/* <Tree
                         onExpand={this.onExpand}
                         expandedKeys={expandedKeys}
                         autoExpandParent={autoExpandParent}
                         onSelect={this.onSelect}
                     >
                         {loop(data)}
-                    </Tree>
+                    </Tree> */}
                     {retr_list}
                 </Col>
                 <Col span={12}>
