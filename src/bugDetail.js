@@ -158,7 +158,6 @@ export class BugMenu extends Component {
                 <Col span={12}>
                     <Search placeholder="输入文本" allowClear enterButton="搜索" size="large"
                         onChange={this.onChange} onSearch={this.onSearch}
-                        style={{width:480}}
                     />
                     {/* <Search style={{marginBottom:8}} placeholder="Search" 
                         onChange={this.onChange} onSearch={this.onSearch}/> */}

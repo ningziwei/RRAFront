@@ -34,6 +34,7 @@ const RetrList = ({idx_txt_hgh}) => {
       }}
     >
       <InfiniteScroll
+        span={12}
         dataLength={data.length}
         next={loadMoreData}
         hasMore={data.length < idx_txt_hgh.length}
@@ -46,7 +47,7 @@ const RetrList = ({idx_txt_hgh}) => {
             active
           />
         }
-        endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+        endMessage={<Divider plain>没有更多了 🤐</Divider>}
         scrollableTarget="scrollableDiv"
       >
         <List
