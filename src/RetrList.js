@@ -2,7 +2,7 @@ import { Avatar, Divider, List, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const RetrList = ({idx_txt_hgh}) => {
+const RetrList = ({parent, idx_txt_hgh}) => {
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
@@ -12,16 +12,13 @@ const RetrList = ({idx_txt_hgh}) => {
     }
     setLoading(true);
     if (parseInt(count)<parseInt(idx_txt_hgh.length)) {
-      setData([...data, ...idx_txt_hgh.slice(count,count+10)]);
+      let ITH_10 = [...idx_txt_hgh.slice(count,count+10)];
+      setData(ITH_10)
       setCount(count+10);
       setLoading(false);
     }
   };
-  
-  useEffect(() => {
-    loadMoreData();
-  }, []);
-  
+  useEffect(() => {loadMoreData();}, [idx_txt_hgh]);
   return (
     <div
       id="scrollableDiv"
@@ -55,7 +52,12 @@ const RetrList = ({idx_txt_hgh}) => {
           renderItem={(item) => (
             <List.Item key={item.idx}>
               <List.Item.Meta
-                title={item.idx}
+                // title={item.idx}
+                title={<div onClick={()=>{parent.setState({idxShow:item.idx})
+                      parent.setState({txtDetail:item.whole_txt})}}>
+                      {item.idx}
+                  </div>
+                }
                 description={item.abstract}
               />
             </List.Item>

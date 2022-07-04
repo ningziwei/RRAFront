@@ -10,6 +10,7 @@ const { Title, Paragraph, Text } = Typography;
 const name = '名称', disease = '疾病';
 const robotAvatar = process.env.PUBLIC_URL + '/img/robot.svg';
 
+// 点击实体弹出展示详细信息的对话框
 class ChildModal extends Component {
     state = { visible: false };
     showModal = () => {
@@ -74,23 +75,23 @@ class ChatWindow extends Component {
             loading: true
         }, () => {
             getAnswerAndGraph(this.state.messageList, (response) => {
-                console.log(response);
+                console.log('response', response);
                 const { answer, graph, result } = response;
                 this._sendMessage(answer);
                 this.props.setGraphData(graph);
+                // console.log('this.props', this.props)
                 this.setState({ loading: false })
-                if (result) {
-                    if (result.length > 0) {
-                        // console.log(result)
-                        getBugDetail(result[0], detail => {
-                            console.log(detail);
-                            
-                            this.setState({ detail });
-                            if(JSON.stringify(this.state.detail) != "{}"){
-                                this.ChildModal.showModal()}
-                        });
+                // 展示回答中的详细信息对话框
+                if (result && result.length > 0) {
+                    // console.log(result)
+                    getBugDetail(result[0], detail => {
+                        console.log(detail);
+                        
+                        this.setState({ detail });
+                        if(JSON.stringify(this.state.detail) != "{}"){
+                            this.ChildModal.showModal()}
+                    });
                        
-                    }
                 }
             });
         });
@@ -103,22 +104,20 @@ class ChatWindow extends Component {
     };
 
     render() {
-        const { messageList, isOpen, detail, loading } = this.state;
-        const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-        return (<div>
-            <Spin spinning={this.state.loading} indicator={antIcon} size="large" delay={500}>
-                <Launcher
-                    agentProfile={{
-                        teamName: "建筑知识问答",
-                        imageUrl: robotAvatar
-                    }}
-                    onMessageWasSent={this._onMessageWasSent}
-                    messageList={messageList}
-                    isOpen={isOpen}
-                    handleClick={this.handleClick}
-                    showEmoji={false}
-                />
-            </Spin>
+        const { messageList, isOpen, detail} = this.state;
+        return (
+        <div>
+            <Launcher
+                agentProfile={{
+                    teamName: "建筑知识问答",
+                    imageUrl: robotAvatar
+                }}
+                onMessageWasSent={this._onMessageWasSent}
+                messageList={messageList}
+                isOpen={isOpen}
+                handleClick={this.handleClick}
+                showEmoji={false}
+            />
             <ChildModal
                 ref={(ChildModal) => { this.ChildModal = ChildModal; }}
                 content={
@@ -177,25 +176,25 @@ export class ChatRobot extends Component {
         this.ChatWindow._onMessageWasSent({
             author: 'me',
             type: 'text',
-            data: { 'text': node }
+            data: {'text': node }
         })
     }
 
     render() {
         return (
-            <Row type='flex' justify="start">
+            <Row type='flex' justify="start" style={{height:260}}>
+                {/* 图谱展示所在列 */}
+                <Col span={16}>
+                    <ForceGraph data={this.state.data} getNodeName={(node) => {
+                        this.onNodeClick(node)
+                    }} />
+                </Col>
                 {/* 对话框所在列 */}
                 <Col span={8}>
                     <ChatWindow
                         setGraphData={this.setGraphData.bind(this)}
                         switchNode={this.state.node}
                         ref={(ChatWindow) => { this.ChatWindow = ChatWindow; }} />
-                </Col>
-                {/* 图谱展示所在列 */}
-                <Col span={16}>
-                    <ForceGraph data={this.state.data} getNodeName={(node) => {
-                        this.onNodeClick(node)
-                    }} />
                 </Col>
             </Row>
         )

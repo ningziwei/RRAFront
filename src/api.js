@@ -59,5 +59,5 @@ export function getRetrival(messageList, callback) {
     postData('retrival', messageList, callback);
 }
 export function getAnswerAndGraph(messageList, callback) {
-    postData('find_node', messageList, callback);
+    postData('answer', messageList, callback);
 }

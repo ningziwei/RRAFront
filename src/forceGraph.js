@@ -1,6 +1,7 @@
 import React, {Component, useCallback} from 'react';
 import {ForceGraph3D} from 'react-force-graph';
 import SpriteText from 'three-spritetext';
+
 function addOpacityToHexColor(color, opacity = 0.5, mode = '#rrggbbaa') {
     const opacityHex = Math.round(opacity * 255).toString(16);
     if (mode === "#rrggbbaa")
@@ -9,10 +10,7 @@ function addOpacityToHexColor(color, opacity = 0.5, mode = '#rrggbbaa') {
         return "#" + opacityHex + color.slice(1);
 }
 
-
-
 var color_dict = {"food":'rgba(255,215,0,1)',"disease":'rgba(65,105,225,1)',"time":'rgba(255,0,0,1)',"symptom":'rgba(60,179,113,1)'}
-
 export class ForceGraph extends Component {
 
     // state = {data: {nodes: [{id: 0}], links: []}};
@@ -45,7 +43,7 @@ export class ForceGraph extends Component {
     //
     // }
 
-        constructor(props) {
+    constructor(props) {
         super(props);
     }
 
@@ -55,6 +53,7 @@ export class ForceGraph extends Component {
    
     render() {
         const {data} = this.props;
+        console.log('force 56we', data)
         if (!data)
             return [];
         return (
@@ -63,13 +62,13 @@ export class ForceGraph extends Component {
                 width={window.innerWidth / 2}
                 height={window.innerHeight}
                 nodeAutoColorBy="group"
-                //nodeColor = {color_dict["group"]}
-              //  nodeOpacity ={0}
+                // nodeColor = {color_dict["group"]}
+                // nodeOpacity ={0}
                 nodeThreeObject={node => {
                     const sprite = new SpriteText(node.id);
-                    sprite.color = node.new ? addOpacityToHexColor(node.color, 0.5) : node.color;
-                    sprite.textHeight = node.new ? 10 : 7;
-                    sprite.fontWeight = node.new ? 'bold' : 'normal';
+                    sprite.color = node.match ? addOpacityToHexColor(node.color, 0.5) : node.color;
+                    sprite.textHeight = node.match ? 10 : 5;
+                    sprite.fontWeight = node.match ? 'bold' : 'normal';
                     return sprite;
                 }}
                 // nodeThreeObject={({ candidate }) => new THREE.Mesh(
@@ -86,18 +85,18 @@ export class ForceGraph extends Component {
                 //       color: Math.round(Math.random() * Math.pow(2, 24)),
                 //       transparent: true,
                 //       opacity: 0.75}))}
-                linkAutoColorBy='relation'
+                linkAutoColorBy='group'
                 linkThreeObjectExtend={true}
                 linkThreeObject={link => {
                     // extend link with text sprite
                     //const sprite = new SpriteText(link.relation);
-                    const sprite = new SpriteText()
-                    sprite.color = link.new ? link.color:addOpacityToHexColor(link.color, 0.7);
-                    sprite.textHeight = link.index ? 0 : 3;
-                    sprite.fontWeight = link.new ? 'normal' : 'bold';
+                    const sprite = new SpriteText(link.relation)
+                    sprite.color = link.match ? link.color:addOpacityToHexColor(link.color, 0.7);
+                    sprite.textHeight = link.index ? 10 : 5;
+                    sprite.fontWeight = link.match ? 'normal' : 'bold';
                     return sprite;
                 }}
-                linkWidth={link => link.new ? 2: 1}
+                linkWidth={link => link.match ? 2: 1}
                 linkOpacity={0.3}
                 linkPositionUpdate={(sprite, {start, end}) => {
                     const middlePos = Object.assign(...['x', 'y', 'z'].map(c => ({
@@ -107,14 +106,14 @@ export class ForceGraph extends Component {
                     // Position sprite
                     Object.assign(sprite.position, middlePos);
                 }}
-                linkDirectionalParticles={link => link.new ? 1 : 0}
+                linkDirectionalParticles={link => link.match ? 1 : 0}
                 linkDirectionalParticleWidth={2}
                 linkDirectionalParticleSpeed={0.005}
     
                 backgroundColor={'rgba(255,255,255,0)'}
                 // enableNodeDrag={false}
                 onNodeClick={(node,e) => {
-                    this.handleClick(node.id);e.preventDefault();}}
+                    this.handleClick(node.idx);e.preventDefault();}}
             
             />
 
