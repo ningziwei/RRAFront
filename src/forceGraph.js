@@ -10,7 +10,6 @@ function addOpacityToHexColor(color, opacity = 0.5, mode = '#rrggbbaa') {
     return "#" + opacityHex + color.slice(1);
 }
 
-var color_dict = {"food":'rgba(255,215,0,1)',"disease":'rgba(65,105,225,1)',"time":'rgba(255,0,0,1)',"symptom":'rgba(60,179,113,1)'}
 export class ForceGraph extends Component {
   constructor(props) {super(props);}
 
@@ -18,7 +17,6 @@ export class ForceGraph extends Component {
    
   render() {
     const {data} = this.props;
-    console.log('force 56we', data)
     if (!data)
       return [];
     return (
@@ -28,8 +26,9 @@ export class ForceGraph extends Component {
         height={560}
         nodeAutoColorBy="group"
         linkAutoColorBy='group'
-        // nodeColor = {color_dict["group"]}
         nodeOpacity ={0.5}
+
+        // 2d图用的属性
         nodeCanvasObject={(node, ctx) => {
           const label = node.id;
           const fontSize = node.match ? 8 : 4;
@@ -52,7 +51,6 @@ export class ForceGraph extends Component {
           const bckgDimensions = node.__bckgDimensions;
           bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
         }}
-
         linkCanvasObjectMode = {() => 'after'}
         linkCanvasObject={(link,ctx) => {
           let label = link.relation;
@@ -83,7 +81,8 @@ export class ForceGraph extends Component {
           ctx.fillText(label, 0, 0);
           ctx.restore();
         }}
-
+        
+        // 3d图用的属性
         nodeThreeObject={node => {
           const sprite = new SpriteText(node.id);
           sprite.color = node.match ? addOpacityToHexColor(node.color, 0.5) : node.color;
@@ -121,7 +120,6 @@ export class ForceGraph extends Component {
         onNodeClick={(node,e) => {
           this.handleClick(node.idx);e.preventDefault();}}
       />
-
     )
   }
 }
