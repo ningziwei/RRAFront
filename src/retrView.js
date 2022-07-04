@@ -58,55 +58,11 @@ export class RetrView extends Component {
     dataList: [],
     detail: {}
   };
-
-  onExpand = expandedKeys => {
-    console.log('点击后1')
-    this.setState({
-      expandedKeys,
-      autoExpandParent: false,
-    });
-  };
-  onChange = e => {
-    console.log('点击后2')
-    const {value} = e.target;
-    const expandedKeys = this.state.dataList
-      .map(item => {
-        if (item.title.indexOf(value) > -1) {
-          return item.parent;
-        }
-        return null;
-      })
-      .filter((item, i, self) => item && self.indexOf(item) === i);
-    console.log(expandedKeys)
-    this.setState({
-      expandedKeys,
-      searchValue: value,
-      autoExpandParent: true,
-    });
-  };
-  onSelect = selectedKeys => {
-    console.log('点击后3')
-    if (selectedKeys.length === 1) {
-      getBugDetail(selectedKeys[0], detail => {
-        console.log(detail);
-        this.setState({detail});
-      });
-    }
-    console.log(selectedKeys);
-  };
   onSearch = query => {
-    console.log(query)
-    console.log('点击后4')
     getRetrival(query, retrs => {
-      console.log(retrs);
+      console.log('召回结果', retrs);
       this.setState({idx_txt_hgh:retrs.idx_txt_hgh});
       console.log(this.state);
-    })
-  }
-  componentWillMount() {
-    getBugs((data) => {
-      const dataList = generateList(data, []);
-      this.setState({data, dataList})
     })
   }
 
@@ -146,7 +102,7 @@ export class RetrView extends Component {
       <Row type="flex" justify="space-around">
         <Col span={11}>
           <Search placeholder="输入文本" allowClear enterButton="搜索" size="large"
-            onChange={this.onChange} onSearch={this.onSearch}
+            onSearch={this.onSearch}
           />
           {retr_list}
         </Col>

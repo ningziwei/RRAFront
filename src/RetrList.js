@@ -1,4 +1,4 @@
-import { Avatar, Divider, List, Skeleton } from 'antd';
+import { Divider, List, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -37,9 +37,7 @@ const RetrList = ({parent, idx_txt_hgh}) => {
         loader={
           <Skeleton
             avatar
-            paragraph={{
-              rows: 1,
-            }}
+            paragraph={{rows: 1}}
             active
           />
         }
@@ -52,10 +50,10 @@ const RetrList = ({parent, idx_txt_hgh}) => {
             <List.Item key={item.idx}>
               <List.Item.Meta
                 // title={item.idx}
-                title={<div onClick={()=>{parent.setState({idxShow:item.idx})
+                title={<a onClick={()=>{parent.setState({idxShow:item.idx})
                       parent.setState({txtDetail:item.whole_txt})}}>
                       {item.idx}
-                  </div>
+                  </a>
                 }
                 description={item.abstract}
               />
