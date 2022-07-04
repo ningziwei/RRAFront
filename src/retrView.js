@@ -18,40 +18,35 @@ const generateList = (data, dataList) => {
   return dataList;
 };
 
-
+// 展示检索结果的详细内容
 class TxtDetail extends Component {
   render() {
     const {data} = this.props;
-    console.log('27_3.4.5-1-3'.split(/_|-/))
-    console.log('27_3.4.5-1-3'.split(/_|-/).slice(-1)[0])
     if (typeof(data)=='undefined') {
       return (
         <div>{data}</div>
       )
     }
     else {
-      return (
-        <Typography>
-          <Title level={3}>{Object.keys(data)[0]}</Title>
-          {Object.entries(data).map(
-            ([key,value])=>{
-              return <div>
-                <Paragraph style={{fontSize:16}}>
+      return (<div style={{height:550, padding:'0 5px', overflow: 'auto',}}>
+          <Typography>
+            <Title level={3}>{Object.keys(data)[0]}</Title>
+            {Object.entries(data).map(
+              ([key,value])=>{
+                return <div style={{fontSize:18}} key={key}>
                   <Text style={{fontWeight:700}}>
                     {key.split(/_|-/).slice(-1)[0]}
                   </Text>
                   <Text> {value[0]}</Text>
-                </Paragraph>
-              </div>
-            }
-          )}
-        </Typography>
+                </div>
+              }
+            )}
+          </Typography>
+        </div>
       )
     }
   }
 }
-
-
 
 export class RetrView extends Component {
   state = {
@@ -142,10 +137,8 @@ export class RetrView extends Component {
     var retr_list=''
     var item_detail=''
     if (this.state.idx_txt_hgh.length!=0) {
-      console.log('142 走一个')
       retr_list = <RetrList parent={this} idx_txt_hgh={this.state.idx_txt_hgh}/>
     }
-    console.log('145', this.state.idx_txt_hgh)
     if (this.state.idxShow!='') {
       item_detail = <TxtDetail data={this.state.txtDetail}/>
     }

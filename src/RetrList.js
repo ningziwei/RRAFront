@@ -12,7 +12,7 @@ const RetrList = ({parent, idx_txt_hgh}) => {
     }
     setLoading(true);
     if (parseInt(count)<parseInt(idx_txt_hgh.length)) {
-      let ITH_10 = [...idx_txt_hgh.slice(count,count+10)];
+      let ITH_10 = [...idx_txt_hgh.slice(0,count+10)];
       setData(ITH_10)
       setCount(count+10);
       setLoading(false);
@@ -25,13 +25,12 @@ const RetrList = ({parent, idx_txt_hgh}) => {
       style={{
         height: 500,
         overflow: 'auto',
-        margin: '10px 0',
-        padding: '0 16px',
+        marginTop: '10px',
+        padding: '0 10px',
         border: '1px solid rgba(140, 140, 140, 0.35)',
       }}
     >
       <InfiniteScroll
-        span={12}
         dataLength={data.length}
         next={loadMoreData}
         hasMore={data.length < idx_txt_hgh.length}
