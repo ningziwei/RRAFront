@@ -1,5 +1,5 @@
 import React, {Component, useCallback} from 'react';
-import {ForceGraph3D} from 'react-force-graph';
+import {ForceGraph2D} from 'react-force-graph';
 import SpriteText from 'three-spritetext';
 
 function addOpacityToHexColor(color, opacity = 0.5, mode = '#rrggbbaa') {
@@ -22,13 +22,68 @@ export class ForceGraph extends Component {
     if (!data)
       return [];
     return (
-      <ForceGraph3D
+      <ForceGraph2D
         graphData={data}
         width={window.innerWidth / 2}
-        height={window.innerHeight}
+        height={560}
         nodeAutoColorBy="group"
+        linkAutoColorBy='group'
         // nodeColor = {color_dict["group"]}
         nodeOpacity ={0.5}
+        nodeCanvasObject={(node, ctx) => {
+          const label = node.id;
+          const fontSize = node.match ? 8 : 4;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          const textWidth = ctx.measureText(label).width;
+          const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = node.color;
+          ctx.fillText(label, node.x, node.y);
+
+          node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+        }}
+        nodePointerAreaPaint={(node, color, ctx) => {
+          ctx.fillStyle = color;
+          const bckgDimensions = node.__bckgDimensions;
+          bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+        }}
+
+        linkCanvasObjectMode = {() => 'after'}
+        linkCanvasObject={(link,ctx) => {
+          let label = link.relation;
+          if (label==='出处') {return}
+          const start = link.source;
+          const end = link.target;
+          // calculate label positioning
+          const textPos = Object.assign(...['x', 'y'].map(c => ({
+            [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+          })));
+          const relLink = { x: end.x - start.x, y: end.y - start.y };
+
+          const fontSize = link.match ? 8 : 4;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          const textWidth = ctx.measureText(label).width;
+          const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+          // draw text label (with background rect)
+          ctx.save();
+          ctx.translate(textPos.x, textPos.y);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.fillRect(- bckgDimensions[0] / 2, - bckgDimensions[1] / 2, ...bckgDimensions);
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = link.color;
+          // label = link.moda+label
+          ctx.fillText(label, 0, 0);
+          ctx.restore();
+        }}
+
         nodeThreeObject={node => {
           const sprite = new SpriteText(node.id);
           sprite.color = node.match ? addOpacityToHexColor(node.color, 0.5) : node.color;
@@ -36,7 +91,6 @@ export class ForceGraph extends Component {
           sprite.fontWeight = node.match ? 'bold' : 'normal';
           return sprite;
         }}
-        linkAutoColorBy='group'
         linkThreeObjectExtend={true}
         linkThreeObject={link => {
           // extend link with text sprite
@@ -47,8 +101,6 @@ export class ForceGraph extends Component {
           sprite.fontWeight = link.match ? 'normal' : 'bold';
           return sprite;
         }}
-        linkWidth={link => link.match ? 1:0.5}
-        linkOpacity={0.3}
         linkPositionUpdate={(sprite, {start, end}) => {
           const middlePos = Object.assign(...['x', 'y', 'z'].map(c => ({
             [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
@@ -56,8 +108,12 @@ export class ForceGraph extends Component {
           // Position sprite
           Object.assign(sprite.position, middlePos);
         }}
+
+        linkWidth={link => link.match ? 2:1}
+        linkOpacity={0.3}
+        // 匹配边上的移动小球
         linkDirectionalParticles={link => link.match ? 1 : 0}
-        linkDirectionalParticleWidth={2}
+        linkDirectionalParticleWidth={3}
         linkDirectionalParticleSpeed={0.005}
 
         backgroundColor={'rgba(255,255,255,0)'}
