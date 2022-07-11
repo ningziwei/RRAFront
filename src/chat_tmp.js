@@ -1,51 +1,51 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Launcher } from 'react-chat-window';
+import { Chat, IContact } from 'react-jwchat'
 import { ForceGraph } from "./forceGraph";
-import { Row, Col, Modal, Typography, Spin, Icon} from 'antd';
+import { Row, Col, Modal } from 'antd';
 import { getAnswerAndGraph, resetRobot } from "./api";
 import { getBugDetail, } from "./api";
-import { LoadingOutlined } from '@ant-design/icons'
 
-const { Title, Paragraph, Text } = Typography;
-const name = '名称', disease = '疾病';
 const robotAvatar = process.env.PUBLIC_URL + '/img/robot.svg';
 
-// 点击实体弹出展示详细信息的对话框
-class ChildModal extends Component {
-    state = { visible: false };
-    showModal = () => {
-        this.setState({
-            visible: true,
-        });
-    };
-    handleOk = e => {
-        console.log(e);
-        this.setState({
-            visible: false,
-        });
-    };
-    handleCancel = e => {
-        console.log(e);
-        this.setState({
-            visible: false,
-        });
-    };
-    render() {
-        return (
-            <Modal
-                width={800}
-                visible={this.state.visible}
-                closable={true}
-                destroyOnClose={true}
-                footer={null}
-                // onOk={this.handleOk} 
-                onCancel={this.handleCancel}
-            >
-                {this.props.content}
-            </Modal>
-        )
-    }
+const messageList = [
+  {
+    _id: '45',
+    date: 1610016423,
+    user: {
+      id: 1234,
+      avatar: robotAvatar,
+      nickname: 'sirosong',
+      desc: '这是我的第一条信息',
+    },
+    message: { type: 'text', content: '打野你会玩吗？' },
+  },
+  {
+    _id: '47',
+    date: 1610016470,
+    user: {
+      id: 9527,
+      avatar: robotAvatar,
+      nickname: '卡兹克',
+      desc: '这是我的第一条信息',
+    },
+    message: { type: 'text', content: '❓ ' },
+  }
+]
+const contact = {
+  id: 9527,
+  avatar: robotAvatar,
+  nickname: '卡兹克',
+  desc: '看我点水就完了',
 }
+const my = {
+  id: 1234,
+  avatar: robotAvatar,
+  nickname: 'sirosong',
+  desc: 'carry大神',
+}
+
+
 
 // 聊天框
 class ChatWindow extends Component {
@@ -59,6 +59,7 @@ class ChatWindow extends Component {
     };
     resetRobot(() => { this.setState({ loading: false }) });
   }
+  // 在聊天框中展示聊天记录
   _sendMessage = (text) => {
     if (text && text.length > 0)  {
       this.setState({
@@ -77,20 +78,10 @@ class ChatWindow extends Component {
       getAnswerAndGraph(this.state.messageList, (response) => {
         console.log('response', response);
         const { answer, graph, result } = response;
-        this._sendMessage('answer');
+        this._sendMessage(answer);
         this.props.setGraphData(graph);
         // console.log('this.props', this.props)
         this.setState({ loading: false })
-        // 展示回答中的详细信息对话框
-        if (result && result.length > 0) {
-          // console.log(result)
-          getBugDetail(result[0], detail => {
-            console.log(detail);
-            this.setState({ detail });
-            if(JSON.stringify(this.state.detail) != "{}"){
-              this.ChildModal.showModal()}
-          });
-        }
       });
     });
   };
@@ -103,6 +94,7 @@ class ChatWindow extends Component {
 
   render() {
     const { messageList, isOpen, detail} = this.state;
+    console.log('messageList', messageList)
     return (
     <div>
       <Launcher
@@ -139,8 +131,9 @@ export class ChatRobot extends Component {
       data: {'text': node }
     })
   }
-
+  
   render() {
+    const [msgList, setMsgList] = useState(messageList)
     return (
       <Row type='flex' justify="start" style={{height:260}}>
         {/* 图谱展示所在列 */}
@@ -155,6 +148,18 @@ export class ChatRobot extends Component {
             setGraphData={this.setGraphData.bind(this)}
             switchNode={this.state.node}
             ref={(ChatWindow) => { this.ChatWindow = ChatWindow; }} 
+          />
+          <Chat
+            contact={contact}
+            me={my}
+            chatList={msgList}
+            onSend={(msg) => setMsgList([...msgList, msg])}
+            onEarlier={() => console.log('EarlierEarlier')}
+            style={{
+              width: 600,
+              height: 500,
+              borderRadius: 5,
+            }}
           />
         </Col>
       </Row>

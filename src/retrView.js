@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Tree, Input, Typography, Row, Col} from 'antd';
-import {getBugDetail, getBugs, getRetrival} from "./api";
+import React, { Component } from 'react';
+import { Tree, Input, Typography, Row, Col } from 'antd';
+import { getRetrival } from "./api";
 import RetrList from './retrList';
 
 const {Title, Paragraph, Text} = Typography;

@@ -19,6 +19,7 @@ const RetrList = ({parent, idx_txt_hgh}) => {
     }
   };
   useEffect(() => {loadMoreData();}, [idx_txt_hgh]);
+  console.log('version 22', React.version)
   return (
     <div
       id="scrollableDiv"
@@ -51,8 +52,8 @@ const RetrList = ({parent, idx_txt_hgh}) => {
               <List.Item.Meta
                 // title={item.idx}
                 title={<a onClick={()=>{parent.setState({idxShow:item.idx})
-                      parent.setState({txtDetail:item.whole_txt})}}>
-                      {item.idx}
+                    parent.setState({txtDetail:item.whole_txt})}}>
+                    {item.idx}
                   </a>
                 }
                 description={item.abstract}

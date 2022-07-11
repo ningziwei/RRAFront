@@ -1,0 +1,66 @@
+.m-input-area__wrapper {
+  display: flex;
+  justify-content: space-between;
+  background: #F6F6F6;
+  padding: 3px 6px 4px 6px;
+  // border-top: solid 1px #f1f1f1;
+  box-shadow: 0 -1px 4px #ddd;
+}
+
+.m-input-area__content {
+  flex-grow: 1;
+  position: relative;
+  // height: fit-content;
+  border-radius: 2px;
+  margin-right: 6px;
+  padding: 4px 6px;
+  background: #fff;
+  // font-size: 0; // 解决textarea后面会添加空白字符 致使的高度无故撑开3px 其它解决方式看笔记
+
+  textarea {
+    display: block; // 解决textarea后面会添加空白字符 致使的高度无故撑开3px 其它解决方式看笔记
+    font-size: 14px;
+    padding: 0;
+    border: 0;
+    line-height: 22px;
+    color: #71777c;
+    resize: none; // 不容许调整元素大小
+    width: 100%;
+    outline: none;
+
+    &::placeholder {
+      color: #CECECE;
+    }
+
+    &:nth-child(2) {
+      visibility: hidden;
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 0 6px;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.m-input-area__btn {
+  width: 60px;
+  height: 30px;
+  font-size: 14px;
+  // text-align: center;
+  color: #fff;
+  background: #007fff;
+  // border: solid 1px #007fff;
+  border: none;
+  border-radius: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 4px;
+  text-indent: 4px;
+
+  &.disable {
+    // border-color: #CECECE;
+    background: #cecece;
+    color: #fff;
+  }
+}
