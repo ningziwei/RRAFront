@@ -38,10 +38,6 @@ export function getAnswer(messageList, callback) {
     postData('getAnswer', messageList, callback);
 }
 
-// export function getAnswerAndGraph(messageList, callback) {
-//     postData('getAnswerAndGraph', messageList, callback);
-// }
-
 export function resetRobot(callback) {
     postData('resetRobot', "",callback);
 }
@@ -54,10 +50,16 @@ export function getBugDetail(bugKey, callback) {
     getData('getBugDetail', callback, {bugKey});
 }
 
+// 检索接口
 export function getRetrival(messageList, callback) {
     // getData('getAnswer', callback, JSON.stringify(messageList));
     postData('retrival', messageList, callback);
 }
+// 问答接口
 export function getAnswerAndGraph(messageList, callback) {
     postData('answer', messageList, callback);
+}
+// 推理接口
+export function getReasAndGraph(messageList, callback) {
+    postData('find_path', messageList, callback);
 }

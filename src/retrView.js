@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
-import { Tree, Input, Typography, Row, Col } from 'antd';
+import { Input, Typography, Row, Col } from 'antd';
 import { getRetrival } from "./api";
 import RetrList from './retrList';
 
-const {Title, Paragraph, Text} = Typography;
-const {TreeNode} = Tree;
+const {Title, Text} = Typography;
 const {Search} = Input;
-const generateList = (data, dataList) => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const {title, parent} = node;
-    dataList.push({title, parent});
-    if (node.children) {
-      generateList(node.children, dataList);
-    }
-  }
-  return dataList;
-};
 
 // 展示检索结果的详细内容
 class TxtDetail extends Component {
@@ -59,6 +47,10 @@ export class RetrView extends Component {
     detail: {}
   };
   onSearch = query => {
+    console.log(50, query)
+    if (query.replace(/(^\s*)|(\s*$)/g, '').replace(/[\r\n]/g, '') === '') {
+      return
+    }
     getRetrival(query, retrs => {
       console.log('召回结果', retrs);
       this.setState({idx_txt_hgh:retrs.idx_txt_hgh});
@@ -67,29 +59,6 @@ export class RetrView extends Component {
   }
 
   render() {
-    const {searchValue, expandedKeys, autoExpandParent, data} = this.state;
-    // 迭代器，输入d，对d的每个元素执行map中的函数
-    const loop = d =>
-      d.map(item => {
-        console.log('120',d)
-        const index = item.title.indexOf(searchValue);
-        const beforeStr = item.title.substr(0, index);
-        const afterStr = item.title.substr(index + searchValue.length);
-        const title = index > -1 ? (
-          <span>{beforeStr}
-            <span style={{color: '#f50'}}>{searchValue}</span>
-            {afterStr}
-          </span>) : (
-          <span>{item.title}</span>);
-        if (item.children) {
-          return (
-            <TreeNode key={item.key} title={title}>
-              {loop(item.children)}
-            </TreeNode>
-          );
-        }
-        return <TreeNode key={item.key} title={title}/>;
-      });
     var retr_list=''
     var item_detail=''
     if (this.state.idx_txt_hgh.length!=0) {
