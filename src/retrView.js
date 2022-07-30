@@ -21,11 +21,24 @@ class TxtDetail extends Component {
             <Title level={3}>{Object.keys(data)[0]}</Title>
             {Object.entries(data).map(
               ([key,value])=>{
+                if (value.length==3 && value[2]){
+                  var txt = ''
+                  var table_img = <img 
+                  src={'data:image/png;base64,'+value[2]} 
+                  style={{
+                    width:'auto',height:'auto',borderRadius:'50%',
+                    margin:'0 auto',display:'block'}}
+                  />
+                } else {
+                  var txt = <Text> {value[0]}</Text>
+                  var table_img = ''
+                }
                 return <div style={{fontSize:18}} key={key}>
                   <Text style={{fontWeight:700}}>
                     {key.split(/_|-/).slice(-1)[0]}
                   </Text>
-                  <Text> {value[0]}</Text>
+                  {txt}
+                  {table_img}
                 </div>
               }
             )}

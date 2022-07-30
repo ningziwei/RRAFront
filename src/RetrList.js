@@ -51,7 +51,8 @@ const RetrList = ({parent, idx_txt_hgh}) => {
             <List.Item key={item.idx}>
               <List.Item.Meta
                 // title={item.idx}
-                title={<a onClick={()=>{parent.setState({idxShow:item.idx})
+                title={
+                  <a onClick={()=>{parent.setState({idxShow:item.idx})
                     parent.setState({txtDetail:item.whole_txt})}}>
                     {item.idx}
                   </a>
